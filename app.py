@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, request
 
 CREATE_STATIONS_TABLE = (
     "CREATE TABLE IF NOT EXISTS stations (id SERIAL PRIMARY KEY, name TEXT);"
@@ -28,3 +28,5 @@ url = os.getenv("DATABASE_URL")
 connection = psycopg2.connect(url)
 
 @app.post("/api/station")
+def create_station():
+    data = request.get_json()

@@ -19,6 +19,8 @@ NUMBER_OF_DAYS = (
     """SELECT COUNT(DISTINCT DATE(date)) AS days FROM prices;"""
 )
 
+AVERAGE_PRICE = """SELECT AVG(price) as average FROM prices:"""
+
 load_dotenv()
 
 app = Flask(__name__)

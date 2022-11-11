@@ -3,6 +3,12 @@ import psycopg2
 from dotenv import load_dotenv
 from flask import Flask
 
+CREATE_STATIONS_TABLE = (
+    "CREATE TABLE IF NOT EXISTS stations (id SERIAL PRIMARY KEY, name TEXT);"
+)
+
+CREATE_PRICES_TABLE = """CREATE TABLE IF NOT EXISTS prices (station_id TEXT, price REAL, date TIMESTAMP, FOREIGN KEY (station_id) REFERENCES stations(id) ON DELETE CASCADE);"""
+
 load_dotenv()
 
 app = Flask(__name__)

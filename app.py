@@ -11,6 +11,10 @@ CREATE_PRICES_TABLE = """CREATE TABLE IF NOT EXISTS prices (station_id TEXT, pri
 
 INSERT_STATION_RETURN_ID = "INSERT INTO stations (name) VALUES (%s) RETURNING id;"
 
+INSERT_PRICE = (
+    "INSERT INTO prices (station_id, price, date) VALUES (%s, %s, %s);"
+)
+
 load_dotenv()
 
 app = Flask(__name__)

@@ -15,6 +15,10 @@ INSERT_PRICE = (
     "INSERT INTO prices (station_id, price, date) VALUES (%s, %s, %s);"
 )
 
+NUMBER_OF_DAYS = (
+    """SELECT COUNT(DISTINCT DATE(date)) AS days FROM prices;"""
+)
+
 load_dotenv()
 
 app = Flask(__name__)

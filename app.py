@@ -1,6 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_bcrypt import Bcrypt
+from sqlalchemy.exc import IntegrityError
+from datetime import date, timedelta
 
 # Created app instance and passed import name
 app=Flask(__name__)
@@ -8,14 +12,33 @@ app=Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"]='postgresql://postgres:password123@localhost/recipes'
 # Needed to set 'SQLALCHEMY_TRACK_MODIFICATIONS' to false in order to fix error and run app properly
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
-
+app.config['JWT_SECRET_KEY'] = 'hello there'
 # Created db SQLAlchemy instance
 db=SQLAlchemy(app)
+# Setting up JWTManager for authentication
+jwt=JWTManager(app)
+#Setting up bcrypt
+bcrypt=Bcrypt(app)
 
 # For each recipe, we will include the following:
 # 1. Unique id
 # 2. Name of recipe
 # 3. Description of recipe
+
+# Firstly, we must create our 'user' model for our authentication
+class User(db.Model):
+    __tablename__ = 'users'
+    # We will allow our users to access the database using their email address and password
+    id=db.Column(db.Integer, primary_key=True)
+    email=db.Column(db.String(), nullable=False, unique=True)
+    password=db.Column(db.String(), nullable=False)
+    # We will also give the option for admin users, but by default this will be false unless specified
+    admin=db.Column(db.Boolean(), default=False)
+
+# Next we'll create our User schema model
+class UserSchema(Schema):
+    class Meta:
+        fields = ('id', 'email', 'password', 'admin')
 
 # Created recipe class, which will inherit from SQLAlchemy
 class Recipe(db.Model):
@@ -68,6 +91,69 @@ class RecipeSchema(Schema):
     id=fields.Integer()
     name=fields.String()
     description=fields.String()
+
+def authorise():
+    user_id = get_jwt_identity()
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    return user.is_admin
+
+@app.cli.command('create')
+def create_db():
+    from app import db, Recipe, User
+    db.create_all()
+    print("Tables created.")
+
+@app.cli.command('drop')
+def drop_db():
+    db.drop_all()
+    print("Tables dropped.")
+
+@app.cli.command('seed')
+def seed_db():
+    users=[
+        User(
+            email='admin@recipes.com',
+            password=bcrypt.generate_password_hash('admin123').decode('utf-8'),
+            admin=True
+        ),
+        User(
+            email='user@recipes.com',
+            password=bcrypt.generate_password_hash('user123').decode('utf-8')
+        )
+    ]
+    db.session.add_all(users)
+    db.session.commit()
+    print('Tables seeded.')
+
+@app.route('/auth/register/', methods=['POST'])
+def auth_register():
+    try:
+        # Create a new User model instance from the user_info
+        user = User(
+            email = request.json['email'],
+            password = bcrypt.generate_password_hash(request.json['password']).decode('utf8'),
+        )
+        # Add and commit user to DB
+        db.session.add(user)
+        db.session.commit()
+        # Respond to client
+        return UserSchema(exclude=['password']).dump(user), 201
+    except IntegrityError:
+        return {'error': 'Email address already in use'}, 409
+
+@app.route('/auth/login/', methods=['POST'])
+def auth_login():
+    # Find a user by email address
+    stmt = db.select(User).filter_by(email=request.json['email'])
+    user = db.session.scalar(stmt)
+    # If user exists and password is correct
+    if user and bcrypt.check_password_hash(user.password, request.json['password']):
+        # return UserSchema(exclude=['password']).dump(user)
+        token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+        return {'email': user.email, 'token': token, 'admin': user.admin}
+    else:
+        return {'error': 'Invalid email or password'}, 401
 
 # Next, we will need to create routes that will allow us to create, read, update and delete (CRUD) resources
 # Our first route will be used to get all recipes, using the 'GET' method. In CRUD, this is a READ command.

@@ -98,34 +98,41 @@ def authorise():
     user = db.session.scalar(stmt)
     return user.is_admin
 
+# This will create our tables - flask create
 @app.cli.command('create')
 def create_db():
     from src.app import db, Recipe, User
     db.create_all()
     print("Tables created.")
 
+# This will drop our table - flask drop
 @app.cli.command('drop')
 def drop_db():
     db.drop_all()
     print("Tables dropped.")
 
+# Flask seed command is used to seed our user table with the below details
 @app.cli.command('seed')
 def seed_db():
     users=[
+        # Admin user
         User(
             email='admin@recipes.com',
             password=bcrypt.generate_password_hash('admin123').decode('utf-8'),
             admin=True
         ),
+        # Non-admin user
         User(
             email='user@recipes.com',
             password=bcrypt.generate_password_hash('user123').decode('utf-8')
         )
     ]
+    # Finally, we commit and return a confirmation message
     db.session.add_all(users)
     db.session.commit()
     print('Tables seeded.')
 
+# This will register a user to our database
 @app.route('/auth/register/', methods=['POST'])
 def auth_register():
     try:
@@ -142,6 +149,7 @@ def auth_register():
     except IntegrityError:
         return {'error': 'Email address already in use'}, 409
 
+# After a user has registered, they may now login using their registered details.
 @app.route('/auth/login/', methods=['POST'])
 def auth_login():
     # Find a user by email address
@@ -266,6 +274,7 @@ def internal_server_error(error):
         {"message": "Error! You have encountered an internal server error."}
     ), 500
 
+# Same as above, only for a different error
 @app.errorhandler(404)
 def not_found(error):
     return jsonify(

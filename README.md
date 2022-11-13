@@ -49,40 +49,42 @@ Object Relational Mapping (ORM) is a technique used by developers to assist with
 ## 5. Document all endpoints for your API.
 Here is a link to all endpoints in my application: https://documenter.getpostman.com/view/23745120/2s8YeuJVzK#f4dc5f2c-1241-4c9e-a1b0-47ee516b92c0
 
-Endpoint 1 – Register New User:
+Endpoint 1 – Register New User: If a user wishes to register, they must provide their email address and password which will then be stored in the database for future reference.
 
-Endpoint 2 – Duplicated Email in Registration:
+Endpoint 2 – Duplicated Email in Registration: If a user registers twice with the same email address, they will be met with an error which disallows this. This is to ensure every user is unique.
 
-Endpoint 3 – User Login:
+Endpoint 3 – User Login: After a user has registered, they may now log into their account using their saved login information.
 
-Endpoint 4 – Create a Recipe:
+Endpoint 4 – Create a Recipe: Users can create their own recipes and post it to the database. Users must provide a heading and description for each recipe they create.
 
-Endpoint 5 – Get a List of All Recipes:
+Endpoint 5 – Get a List of All Recipes: If a user wishes to see a list of all recipes stored in the database, they can do so by getting a list of all recipes available.
 
-Endpoint 6 – Retrieve Single Recipe by ID:
+Endpoint 6 – Retrieve Single Recipe by ID: Once the user sees a specific recipe they would like to read about, they can retrieve this singlular recipe via it's unique id.
 
-Endpoint 7 – Update a Recipe:
+Endpoint 7 – Update a Recipe: If a user wishes to update or edit a recipe, they can do so.
 
-Endpoint 8 – Delete a Recipe:
+Endpoint 8 – Delete a Recipe: If a user wishes to delete a recipe, they can do so.
 
 ## 6. An ERD for your app.
 ![ERD for Application](docs/ERD.png)
 
 ## 7. Detail any third-party services that your app will use.
-- Postman
-- pgAdmin 4
-- GitHub
+- Postman: Throughout the development of my project, I was constantly testing my app via postman. Postman provided an excellent interface for making HTTP requests locally and testing for correct responses. 
+- pgAdmin 4: I utilised pgAdmin 4 to set up and manage my database for my app as it provided a good graphical user interface when creating and managing my database tables, which made this task a lot easier.
+- GitHub: Finally, I utilised GitHub to post my source code and push all commits.
 
 ## 8. Describe your projects models in terms of the relationships they have with each other.
 Firstly, the user model is what will contain each individual users unique information, such as their user_id, email address and password. This user information is first registered in our database upon registration, where the user will initially register their email address and password. Following registration, their details will be stored under the user model, where they can login in future sessions. There is also a slight variation of the user model, this being an admin. An admin is simply a user (staff member) that will have more permissions than a standard user, this permission is also declared during registration as a boolean. Our next model is the Recipe model, which the user can read and interact with. Once a user has registered, they have now been granted permission to create their own recipe and post it, where it will be stored in our database. The recipe model simply contains a unique id, name and description. If a user wishes to read other recipes within the database, they can do so by getting a full list of all recipes that have been posted. Once a user sees a recipe they would like to read further about, they can select a specific recipe via it's unique id. If a user deems that a recipe needs to be updated or edited, they can also do so. And finally, if a user wishes to delete a specific recipe, they can also do so by specifying this recipes unique id.
 
 ## 9. Discuss the database relations to be implemented in your application.
-The most fundamental database relation that will occur in this application will be between the user and the recipes. Once a user has registered, they can now login and interact with the recipes stored within our database. 
+The most fundamental database relation that will occur in this application will be between the user and the recipes. Once a user has registered, they can now login and interact with the recipes stored within our database. More specifically, the user will be able to get a list of all recipes that have been posted and browse which recipe they would like to learn further about. Once they have chosen a specific recipe, they can select this recipe via it's unique id. The user will now be able to read the full description of this specific recipe. If the user believes that this recipe needs changes or should be updated, they can also do so. Additionally, they may also delete a recipe via it's id. And finally, and probably most importantly, users can post their very own recipes to the database by providing a heading and description.
 
 ## 10. Describe the way tasks are allocated and tracked in your project.
-Screenshot of Trello board at beginning of project:
+Throughout the development of this project, I decided to utilise Trello to plan, manage and track my progress of this app. Overall, Trello provides all the tools needed to effectively specify which tasks need to be completed, which tasks are ongoing and which tasks have been completed. Furthermore, providing time constraints for specific tasks was also important, ensuring a steady workflow. Also ensuring that I was completing the README.md documentation during and throughout the entirety of development also meant that I was able to document everything at a manageable pace, with the best accuracy.
+
+### Screenshot of Trello board at beginning of project:
 ![Screenshot of Trello board at beginning of project](docs/Trello_start.png)
-Screenshot of Trello board halfway through project:
+### Screenshot of Trello board halfway through project:
 ![Screenshot of Trello board halfway through project](docs/Trello_during.png)
-Screenshot of Trello board at end of project:
+### Screenshot of Trello board at end of project:
 ![Screenshot of Trello board at end of project](docs/Trello_end.png)

@@ -28,6 +28,8 @@ Here is a list of reasons why I believe PostgreSQL is a good choice for the deve
 -	Wide language support (e.g. Python, Perl, Java, C, C++, Perl and more).]
 -	Compliant with SQL standard.
 -	A wide array of extensions are available, making it highly expandable.
+
+
 However, when comparing to other database systems, PostgreSQL definitely does have some drawbacks, these being:
 -	By default, it is not available on all hosts.
 -	Relatively low speed and performance metrics when comparing to other DBMS’, such as MySQL.

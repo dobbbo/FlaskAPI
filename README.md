@@ -74,8 +74,10 @@ Endpoint 8 – Delete a Recipe:
 - GitHub
 
 ## 8. Describe your projects models in terms of the relationships they have with each other.
+Firstly, the user model is what will contain each individual users unique information, such as their user_id, email address and password. This user information is first registered in our database upon registration, where the user will initially register their email address and password. Following registration, their details will be stored under the user model, where they can login in future sessions. There is also a slight variation of the user model, this being an admin. An admin is simply a user (staff member) that will have more permissions than a standard user, this permission is also declared during registration as a boolean. Our next model is the Recipe model, which the user can read and interact with. Once a user has registered, they have now been granted permission to create their own recipe and post it, where it will be stored in our database. The recipe model simply contains a unique id, name and description. If a user wishes to read other recipes within the database, they can do so by getting a full list of all recipes that have been posted. Once a user sees a recipe they would like to read further about, they can select a specific recipe via it's unique id. If a user deems that a recipe needs to be updated or edited, they can also do so. And finally, if a user wishes to delete a specific recipe, they can also do so by specifying this recipes unique id.
 
 ## 9. Discuss the database relations to be implemented in your application.
+The most fundamental database relation that will occur in this application will be between the user and the recipes. Once a user has registered, they can now login and interact with the recipes stored within our database. 
 
 ## 10. Describe the way tasks are allocated and tracked in your project.
 Screenshot of Trello board at beginning of project:

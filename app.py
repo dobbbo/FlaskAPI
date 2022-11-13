@@ -100,7 +100,7 @@ def authorise():
 
 @app.cli.command('create')
 def create_db():
-    from app import db, Recipe, User
+    from src.app import db, Recipe, User
     db.create_all()
     print("Tables created.")
 
